@@ -66,6 +66,13 @@ func adderr(pos src.XPos, format string, args ...interface{}) {
 	})
 }
 
+func addwarn(pos src.XPos, format string, args ...interface{}) {
+	errors = append(errors, Error{
+		pos: pos,
+		msg: fmt.Sprintf("%v: (WARNING) %s\n", linestr(pos), fmt.Sprintf(format, args...)),
+	})
+}
+
 // byPos sorts errors by source position.
 type byPos []Error
 
@@ -168,7 +175,7 @@ func Warn(fmt_ string, args ...interface{}) {
 }
 
 func Warnl(line src.XPos, fmt_ string, args ...interface{}) {
-	adderr(line, fmt_, args...)
+	addwarn(line, fmt_, args...)
 	if Debug['m'] != 0 {
 		flusherrors()
 	}
